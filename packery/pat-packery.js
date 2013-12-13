@@ -5,11 +5,14 @@
 define([
     "jquery",
     "patterns",
-    "patterns/core/parser",
-    "Libraries/imagesloaded",
-    "Libraries/packery.pkgd"
-], function($, patterns, Parser, imagesLoaded) {
+    "imagesloaded",
+    "packery.pkgd"
+], function($, patterns, imagesLoaded) {
+
+    require(['parser']);
+    Parser = require('parser');
     var parser = new Parser("packery");
+
 
     parser.add_argument("item-selector", ".item");
     parser.add_argument("column-width", 240);
