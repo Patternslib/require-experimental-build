@@ -3,50 +3,57 @@
  * JavaScript is all like "You images are done yet or what?"
  */
 
-( function( window ) {
+(function( root, factory) {
 
-'use strict';
-
-var $ = window.jQuery;
-var console = window.console;
-var hasConsole = typeof console !== 'undefined';
-
-// -------------------------- helpers -------------------------- //
-
-// extend objects
-function extend( a, b ) {
-  for ( var prop in b ) {
-    a[ prop ] = b[ prop ];
-  }
-  return a;
-}
-
-var objToString = Object.prototype.toString;
-function isArray( obj ) {
-  return objToString.call( obj ) === '[object Array]';
-}
-
-// turn element or nodeList into an array
-function makeArray( obj ) {
-  var ary = [];
-  if ( isArray( obj ) ) {
-    // use object if already an array
-    ary = obj;
-  } else if ( typeof obj.length === 'number' ) {
-    // convert nodeList to array
-    for ( var i=0, len = obj.length; i < len; i++ ) {
-      ary.push( obj[i] );
+    if (typeof define === 'function' && define.amd) {
+        define(['jquery', 'eventEmitter', 'eventie'], function ($, EventEmitter, eventie) {
+            return factory($, EventEmitter, eventie);
+        });
+    } else {
+        root.imagesLoaded = factory($, EventEmitter, eventie);
     }
-  } else {
-    // array of single index
-    ary.push( obj );
+
+}(this, function ($, EventEmitter, eventie) {
+
+
+  'use strict';
+  var console = window.console;
+
+  var hasConsole = typeof console !== 'undefined';
+  // -------------------------- helpers -------------------------- //
+
+  // extend objects
+  function extend( a, b ) {
+    for ( var prop in b ) {
+      a[ prop ] = b[ prop ];
+    }
+    return a;
   }
-  return ary;
-}
 
-// --------------------------  -------------------------- //
+  var objToString = Object.prototype.toString;
+  function isArray( obj ) {
+    return objToString.call( obj ) === '[object Array]';
+  }
 
-function defineImagesLoaded( EventEmitter, eventie ) {
+  // turn element or nodeList into an array
+  function makeArray( obj ) {
+    var ary = [];
+    if ( isArray( obj ) ) {
+      // use object if already an array
+      ary = obj;
+    } else if ( typeof obj.length === 'number' ) {
+      // convert nodeList to array
+      for ( var i=0, len = obj.length; i < len; i++ ) {
+        ary.push( obj[i] );
+      }
+    } else {
+      // array of single index
+      ary.push( obj );
+    }
+    return ary;
+  }
+
+  // --------------------------  -------------------------- //
 
   /**
    * @param {Array, Element, NodeList, String} elem
@@ -273,23 +280,8 @@ function defineImagesLoaded( EventEmitter, eventie ) {
   // -----  ----- //
 
   return ImagesLoaded;
-}
 
-// -------------------------- transport -------------------------- //
+}));
 
-if ( typeof define === 'function' && define.amd ) {
-  // AMD
-  define( [
-      'Libraries/eventEmitter',
-      'Libraries/eventie'
-    ],
-    defineImagesLoaded );
-} else {
-  // browser global
-  window.imagesLoaded = defineImagesLoaded(
-    window.EventEmitter,
-    window.eventie
-  );
-}
 
-})( window );
+
